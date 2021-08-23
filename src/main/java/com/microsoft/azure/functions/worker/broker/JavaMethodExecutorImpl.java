@@ -4,7 +4,6 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
-import com.microsoft.azure.functions.annotation.*;
 import com.microsoft.azure.functions.worker.binding.*;
 import com.microsoft.azure.functions.worker.description.*;
 import com.microsoft.azure.functions.worker.reflect.*;
@@ -56,7 +55,7 @@ public class JavaMethodExecutorImpl implements JavaMethodExecutor {
     }
 
     private Class<?> getContainingClass(String className, ClassLoaderProvider classLoaderProvider) throws ClassNotFoundException {
-        ClassLoader classLoader = classLoaderProvider.createClassLoader();
+        ClassLoader classLoader = classLoaderProvider.getClassLoader();
         return Class.forName(className, true, classLoader);
     }
 

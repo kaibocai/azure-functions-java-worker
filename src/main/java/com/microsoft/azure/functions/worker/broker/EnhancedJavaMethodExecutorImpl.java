@@ -18,7 +18,7 @@ public class EnhancedJavaMethodExecutorImpl implements JavaMethodExecutor {
     {
         descriptor.validateMethodInfo();
 
-        this.classLoader = classLoaderProvider.createClassLoader();
+        this.classLoader = (CustomURLClassLoader) classLoaderProvider.getClassLoader();
         this.containingClass = getContainingClass(descriptor.getFullClassName());
         this.overloadResolver = new ParameterResolver();
 
@@ -60,11 +60,11 @@ public class EnhancedJavaMethodExecutorImpl implements JavaMethodExecutor {
     }
 
     private Class<?> getContainingClass(String className) throws ClassNotFoundException {
-        return Class.forName(className, true, this.classLoader);
+        return Class.forName(className, true, classLoader);
     }
 
     private final Class<?> containingClass;
-    private final ClassLoader classLoader;
+    private final CustomURLClassLoader classLoader;
     private final ParameterResolver overloadResolver;
     private final Map<String, BindingDefinition> bindingDefinitions;
 }

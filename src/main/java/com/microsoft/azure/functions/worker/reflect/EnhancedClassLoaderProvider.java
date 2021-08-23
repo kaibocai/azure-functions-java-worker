@@ -11,37 +11,13 @@ import com.microsoft.azure.functions.worker.*;
 
 public class EnhancedClassLoaderProvider implements ClassLoaderProvider {
     public EnhancedClassLoaderProvider() {
-        urls = Collections.newSetFromMap(new ConcurrentHashMap<URL, Boolean>());
+        this.classLoader = new CustomURLClassLoader(new URL[0], this.getClass().getClassLoader());
     }
 
-    /*
-     * @see com.microsoft.azure.functions.reflect.ClassLoaderProvider#createClassLoader()
-     */
     @Override
-    public ClassLoader createClassLoader() {
-        URL[] urlsForClassLoader = new URL[urls.size()];
-        urls.toArray(urlsForClassLoader);
-
-        URLClassLoader classLoader = new URLClassLoader(urlsForClassLoader);
-        loadDrivers(classLoader);
-        return classLoader;
-    }
-
-    private void loadDrivers(URLClassLoader classLoader) {
+    public ClassLoader getClassLoader() {
         Thread.currentThread().setContextClassLoader(classLoader);
-        try {
-            ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class);
-            Iterator<Driver> driversIterator = loadedDrivers.iterator();
-            try {
-                while (driversIterator.hasNext()) {
-                    driversIterator.next();
-                }
-            } catch (Throwable t) {
-                // Do nothing
-            }
-        } finally {
-            Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
-        }
+        return classLoader;
     }
 
     @Override
@@ -64,13 +40,9 @@ public class EnhancedClassLoaderProvider implements ClassLoaderProvider {
 
     @Override
     public void addUrl(URL url) throws IOException {
-        if (urls.contains(url)) {
-            return;
-        }
-
         WorkerLogManager.getSystemLogger().info("Loading file URL: " + url);
-
-        urls.add(url);
+        classLoader.addURL(url);
     }
-    private final Set<URL> urls;
+
+    private final CustomURLClassLoader classLoader;
 }

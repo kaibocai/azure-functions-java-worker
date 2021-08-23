@@ -22,7 +22,7 @@ public class DefaultClassLoaderProvider implements ClassLoaderProvider {
    * @see com.microsoft.azure.functions.reflect.ClassLoaderProvider#createClassLoader()
    */
   @Override
-  public ClassLoader createClassLoader() {
+  public ClassLoader getClassLoader() {
     URL[] urlsForClassLoader = new URL[urls.size()];
     urls.toArray(urlsForClassLoader);
 
