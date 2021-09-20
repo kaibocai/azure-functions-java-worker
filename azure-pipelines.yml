@@ -42,11 +42,14 @@ jobs:
   - pwsh: |
        Get-Command mvn
     displayName: 'Check Maven is installed'
-  - task: PowerShell@2
-    inputs:
-      targetType: 'filePath'
-      filePath: $(System.DefaultWorkingDirectory)\package-pipeline.ps1
-      arguments: '-p:buildNumber=$(buildNumber)'
+  - pwsh: |
+      Write-Host "buildNumber outside: " "$(buildNumber)"
+      .\package-pipeline.ps1 -buildNumber "$(buildNumber)"
+#  - task: PowerShell@2
+#    inputs:
+#      targetType: 'filePath'
+#      filePath: $(System.DefaultWorkingDirectory)\package-pipeline.ps1
+#      arguments: '-p:buildNumber=$(buildNumber)'
     displayName: 'Executing build script'
   - task: CopyFiles@2
     inputs:
