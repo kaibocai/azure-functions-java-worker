@@ -44,7 +44,7 @@ jobs:
       targetType: 'filePath'
       filePath: $(System.DefaultWorkingDirectory)\package-pipeline.ps1
       arguments: > # Use this to avoid newline characters in multiline string
-        -buildNumber "test_kc"
+        -buildNumber "3.0.0"
     displayName: 'Executing build script'
   - task: CopyFiles@2
     inputs:
